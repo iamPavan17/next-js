@@ -1,5 +1,8 @@
 "use server";
 
+import { redirect } from "next/navigation";
+import { saveMeal } from "./meals";
+
 export async function shareMeal(formData) {
   const meal = {
     title: formData.get("title"), // "title" is the name of the input field.
@@ -9,6 +12,6 @@ export async function shareMeal(formData) {
     creator: formData.get("name"),
     creator_email: formData.get("email"),
   };
-  // this will be shown in the terminal as this is the server function
-  console.log(meal);
+  await saveMeal(meal);
+  redirect("/meals");
 }

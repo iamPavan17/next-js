@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { saveMeal } from "./meals";
 
-export async function shareMeal(formData) {
+export async function shareMeal(prevState, formData) {
   const meal = {
     title: formData.get("title"), // "title" is the name of the input field.
     summary: formData.get("summary"),
@@ -25,7 +25,12 @@ export async function shareMeal(formData) {
     isInvalidText(meal.creator_email)
   ) {
     // This throw error calles the error page.
-    throw new Error("Invalid Form values!");
+    // throw new Error("Invalid Form values!");
+
+    // Values can be strings, numbers, arrays, objects.
+    return {
+      message: "Invalid form values!",
+    };
   }
 
   await saveMeal(meal);

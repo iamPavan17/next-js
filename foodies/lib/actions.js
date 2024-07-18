@@ -12,6 +12,22 @@ export async function shareMeal(formData) {
     creator: formData.get("name"),
     creator_email: formData.get("email"),
   };
+
+  function isInvalidText(text) {
+    return !text || text.trim() === "";
+  }
+
+  if (
+    isInvalidText(meal.title) ||
+    isInvalidText(meal.summary) ||
+    isInvalidText(meal.instructions) ||
+    isInvalidText(meal.creator) ||
+    isInvalidText(meal.creator_email)
+  ) {
+    // This throw error calles the error page.
+    throw new Error("Invalid Form values!");
+  }
+
   await saveMeal(meal);
   redirect("/meals"); // As the name says, it redirects to the provided URL
 }

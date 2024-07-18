@@ -13,5 +13,5 @@ export async function shareMeal(formData) {
     creator_email: formData.get("email"),
   };
   await saveMeal(meal);
-  redirect("/meals");
+  redirect("/meals"); // As the name says, it redirects to the provided URL
 }

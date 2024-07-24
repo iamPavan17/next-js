@@ -1,33 +1,65 @@
 import Link from "next/link";
 
 import NewsList from "@/components/news-list";
-import { getAvailableNewsYears, getNewsForYear } from "@/lib/news";
+import {
+  getAvailableNewsMonths,
+  getAvailableNewsYears,
+  getNewsForYear,
+  getNewsForYearAndMonth,
+} from "@/lib/news";
 
 export default function FilteredNewsPage({ params }) {
   const filter = params.filter;
-  /*
-  filter values: 
-    http://localhost:3000/archive -> undefined
-    http://localhost:3000/archive/2024 -> [ '2024' ]
-    http://localhost:3000/archive/2024/technology -> [ '2024', 'technology' ]
-  */
+  const selectedYear = filter?.[0];
+  const selectedMonth = filter?.[1];
 
-  const links = getAvailableNewsYears();
+  let news;
+  let links = getAvailableNewsYears();
+
+  if (selectedYear && !selectedMonth) {
+    news = getNewsForYear(selectedYear);
+    links = getAvailableNewsMonths(selectedYear);
+  }
+
+  if (selectedYear && selectedMonth) {
+    news = getNewsForYearAndMonth(selectedYear, selectedMonth);
+    links = [];
+  }
+
+  let newsContent = <p>No news found for the selected period.</p>;
+
+  if (news && news.length > 0) {
+    newsContent = <NewsList news={news} />;
+  }
+
+  if (
+    (selectedYear && !getAvailableNewsYears().includes(+selectedYear)) ||
+    (selectedMonth &&
+      !getAvailableNewsMonths(selectedMonth).includes(+selectedMonth))
+  ) {
+    throw new Error("Invalid filter");
+  }
 
   return (
-    <header id="archive-header">
-      <nav>
-        <ul>
-          {links.map((link) => (
-            <li key={link}>
-              <Link href={`/archive/${link}`}>{link}</Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </header>
-  );
-  // const news = getNewsForYear(newsYear);
+    <>
+      <header id="archive-header">
+        <nav>
+          <ul>
+            {links.map((link) => {
+              const href = selectedYear
+                ? `/archive/${selectedYear}/${link}`
+                : `/archive/${link}`;
 
-  // return <NewsList news={news} />;
+              return (
+                <li key={link}>
+                  <Link href={href}>{link}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </header>
+      {newsContent}
+    </>
+  );
 }

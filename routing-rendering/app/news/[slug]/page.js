@@ -1,4 +1,5 @@
-import { notFound } from "next/navigation";
+"use client";
+import { notFound, useRouter } from "next/navigation";
 
 import { DUMMY_NEWS } from "@/dummy-news";
 import Link from "next/link";
@@ -7,9 +8,15 @@ export default function NewsDetailPage({ params }) {
   const newsSlug = params.slug;
   const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsSlug);
 
+  const router = useRouter();
+
   if (!newsItem) {
     notFound();
   }
+
+  const handleGoBack = () => {
+    router.back(); // Navigate to the previous history entry.
+  };
 
   return (
     <>
@@ -22,6 +29,8 @@ export default function NewsDetailPage({ params }) {
           <time dateTime={newsItem.date}>{newsItem.date}</time>
         </header>
         <p>{newsItem.content}</p>
+
+        <button onClick={handleGoBack}>Back</button>
       </article>
     </>
   );

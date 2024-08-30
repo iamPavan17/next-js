@@ -1,1 +1,1 @@
-console.log("Hello Next.js!!!");
+console.log("Hello Next.js!");

@@ -1,18 +1,27 @@
-import { storePost } from '@/lib/posts';
+import { redirect } from "next/navigation";
+
+import { storePost } from "@/lib/posts";
+import FormSubmit from "@/components/FormSubmit";
 
 export default function NewPostPage() {
   async function createPost(formData) {
     "use server";
-    const title = formData.get('title');
-    const image = formData.get('image');
-    const content = formData.get('content');
 
-    storePost({
-      imageUrl: '',
+    // should have name property in the input field
+    const title = formData.get("title");
+    const image = formData.get("image");
+    const content = formData.get("content");
+
+    await storePost({
+      imageUrl: "",
       title,
       content,
-      userId: 1
-    })
+      userId: 1,
+    });
+
+    // We can also call this method, inside the component as well.
+    // This will take a string that defines the path to which, we wanna redirect.
+    redirect("/feed");
   }
 
   return (
@@ -37,8 +46,7 @@ export default function NewPostPage() {
           <textarea id="content" name="content" rows="5" />
         </p>
         <p className="form-actions">
-          <button type="reset">Reset</button>
-          <button>Create Post</button>
+          <FormSubmit />
         </p>
       </form>
     </>

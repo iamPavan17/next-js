@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { storePost } from "@/lib/posts";
+import { uploadImage } from "@/lib/cloudinary";
 
 async function createPost(_prevState, formData) {
   // should have name property in the input field
@@ -28,8 +29,18 @@ async function createPost(_prevState, formData) {
     return { errors };
   }
 
+  let imageUrl;
+
+  try {
+    imageUrl = await uploadImage(image);
+  } catch (e) {
+    throw new Error(
+      "Image upload failed, post was not created. Please try again later."
+    );
+  }
+
   await storePost({
-    imageUrl: "",
+    imageUrl,
     title,
     content,
     userId: 1,

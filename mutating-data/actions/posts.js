@@ -46,6 +46,7 @@ async function createPost(_prevState, formData) {
     content,
     userId: 1,
   });
+  revalidatePath("/", layout);
 
   // We can also call this method, inside the component as well.
   // This will take a string that defines the path to which, we wanna redirect.
@@ -54,7 +55,7 @@ async function createPost(_prevState, formData) {
 
 async function togglePostLikeStatus(postId) {
   await updatePostLikeStatus(postId, 2);
-  revalidatePath("/feed");
+  revalidatePath("/", layout);
 }
 
 export { createPost, togglePostLikeStatus };

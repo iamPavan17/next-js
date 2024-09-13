@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { storePost, updatePostLikeStatus } from "@/lib/posts";
 import { uploadImage } from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 
 async function createPost(_prevState, formData) {
   // should have name property in the input field
@@ -52,7 +53,8 @@ async function createPost(_prevState, formData) {
 }
 
 async function togglePostLikeStatus(postId) {
-  updatePostLikeStatus(postId, 2);
+  await updatePostLikeStatus(postId, 2);
+  revalidatePath("/feed");
 }
 
 export { createPost, togglePostLikeStatus };
